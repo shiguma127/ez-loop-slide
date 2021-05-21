@@ -6,16 +6,11 @@
         dark
         v-show="!fullscreen"
     >
-      <v-spacer></v-spacer>
-
-      <v-btn
-          text
-          @click="changeFullscreen()">
-        <span class="mr-5">開始</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <span>
+        Ez-loop-slide
+      </span>
     </v-app-bar>
-    <v-main id="main" style="background-color:#000;" :class="padding">
+    <v-main id="main" :style=background :class="padding">
       <v-carousel
           cycle
           hide-delimiters
@@ -104,6 +99,13 @@
                     single-line
                 ></v-select>
               </v-col>
+              <v-btn
+                  color="green darken-1"
+                  dark
+                  @click="changeFullscreen()">
+                <span class="mr-5">開始</span>
+                <v-icon>mdi-open-in-new</v-icon>
+              </v-btn>
             </v-row>
           </v-card>
         </v-col>
@@ -146,6 +148,7 @@ export default {
     images: [],
     selectedImage: {},
     fullscreen: false,
+    background:"background-color:#FFF;",
     imageElement: {},
     padding: "",
     input: 5,
@@ -186,6 +189,7 @@ export default {
         console.log("entered full-screen mode.");
       } else {
         console.log('Leaving full-screen mode.');
+        this.background = "background-color:#FFF;"
         document.body.classList.remove("hide")
         this.fullscreen = false
         this.padding = ""
@@ -217,6 +221,7 @@ export default {
         this.fullscreen = true
         this.imageElement.src = this.images[0].src
         this.imageElement.requestFullscreen(); // フルスクリーンを表示する
+        this.background = "background-color:#000;"
         console.log(document.body.classList)
         document.body.classList.add("hide")
         this.padding = "pa-0"
