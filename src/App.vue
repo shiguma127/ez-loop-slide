@@ -15,22 +15,23 @@
       </v-btn>
     </v-app-bar>
     <v-main id="main" style="background-color:#000;" :class="padding">
-        <v-carousel
-            cycle
-            hide-delimiters
-            height="100vh"
-            show-arrows-on-hover
-            v-show="fullscreen"
+      <v-carousel
+          cycle
+          hide-delimiters
+          :interval="interval"
+          height="100vh"
+          show-arrows-on-hover
+          v-show="fullscreen"
+      >
+        <v-carousel-item
+            color="#303030"
+            contain
+            v-for="(image, i) in images"
+            :key="i"
+            :src="image.src"
         >
-          <v-carousel-item
-              color="#303030"
-              contain
-              v-for="(image, i) in images"
-              :key="i"
-              :src="image.src"
-          >
-          </v-carousel-item>
-        </v-carousel>
+        </v-carousel-item>
+      </v-carousel>
       <v-dialog
           v-model="dialog"
           max-width="290"
@@ -66,6 +67,26 @@
         </v-card>
       </v-dialog>
       <v-row v-show="!fullscreen">
+        <v-col xs="12"
+               sm="6"
+               md="3"
+               class="pa-2"
+        >
+          <v-card class="ma-6" height="370px">
+            <v-card-title>
+              設定
+            </v-card-title>
+            <v-card-text>
+                <v-text-field
+                    v-model="input"
+                    label="切り替え周期(秒)"
+                    type="number"
+                    max="999"
+                    min="1"
+                />
+            </v-card-text>
+          </v-card>
+        </v-col>
         <v-col v-for="(image,index) in images"
                :key="index"
                xs="12"
@@ -106,8 +127,14 @@ export default {
     selectedImage: {},
     fullscreen: false,
     imageElement: {},
-    padding:""
+    padding: "",
+    input:1
   }),
+  computed: {
+    interval:function () {
+       return this.input*1000
+    }
+  },
   filters: {
     omittedText(text) {
       // 11文字目以降は"…"
@@ -171,6 +198,7 @@ export default {
 .hide::-webkit-scrollbar {
   display: none;
 }
+
 .no-padding {
   padding: 32px 0px 0px;
 }
