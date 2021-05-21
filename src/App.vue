@@ -7,6 +7,7 @@
         v-show="!fullscreen"
     >
       <v-spacer></v-spacer>
+
       <v-btn
           text
           @click="changeFullscreen()">
@@ -24,6 +25,8 @@
           v-show="fullscreen"
       >
         <v-carousel-item
+            :transition="transition.effect"
+            :reverse-transition="transition.effect"
             color="#303030"
             contain
             v-for="(image, i) in images"
@@ -66,25 +69,42 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-row v-show="!fullscreen">
-        <v-col xs="12"
-               sm="6"
-               md="3"
-               class="pa-2"
+      <v-row v-show="!fullscreen" >
+        <v-col cols="12"
+               class="pa-2,mx-4"
         >
-          <v-card class="ma-6" height="370px">
-            <v-card-title>
-              設定
-            </v-card-title>
-            <v-card-text>
+
+          <v-card class="my-4">
+            <v-row class="mx-6"  align="center">
+              <v-spacer/>
+              <v-btn color="primary" class="ma-2" @click="decrimentInput">
+                -
+              </v-btn>
+              <v-col cols="1" class="pa-0">
                 <v-text-field
-                    v-model="input"
-                    label="切り替え周期(秒)"
+                    label="周期(秒)"
                     type="number"
+                    v-model="input"
                     max="999"
                     min="1"
                 />
-            </v-card-text>
+              </v-col>
+              <h2>秒</h2>
+              <v-btn color="primary" class="ma-2" @click="incrimentInput">
+                +
+              </v-btn>
+              <v-col cols="2">
+                <v-select
+                    v-model="transition"
+                    :items="transitionList"
+                    :item-text="item => item.name"
+                    label="Select"
+                    persistent-hint
+                    return-object
+                    single-line
+                ></v-select>
+              </v-col>
+            </v-row>
           </v-card>
         </v-col>
         <v-col v-for="(image,index) in images"
@@ -128,11 +148,13 @@ export default {
     fullscreen: false,
     imageElement: {},
     padding: "",
-    input:1
+    input: 5,
+    transitionList:[{name:"フェード",effect:"fade-transition"},{name:"スライド",effect:undefined }],
+    transition:{name:"フェード",effect:"fade-transition"}
   }),
   computed: {
-    interval:function () {
-       return this.input*1000
+    interval: function () {
+      return this.input * 1000
     }
   },
   filters: {
@@ -180,6 +202,16 @@ export default {
       this.images.splice(index, 1)
       this.selectedImage = {}
     },
+    incrimentInput() {
+      if (this.input < 1000) {
+        this.input = parseInt(this.input)+1
+      }
+    },
+    decrimentInput() {
+      if (this.input > 1) {
+        this.input = parseInt(this.input)-1
+      }
+    },
     changeFullscreen() {
       if (this.images.length >= 1) {
         this.fullscreen = true
@@ -197,6 +229,9 @@ export default {
 <style>
 .hide::-webkit-scrollbar {
   display: none;
+}
+.hide {
+  cursor: none;
 }
 
 .no-padding {
